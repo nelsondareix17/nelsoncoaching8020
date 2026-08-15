@@ -13,6 +13,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app.index'
+import { Route as AuthenticatedAppActiviteRouteImport } from './routes/_authenticated/app.activite'
+import { Route as AuthenticatedAppRepasRouteImport } from './routes/_authenticated/app.repas'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -33,14 +35,29 @@ const AuthenticatedAppIndexRoute = AuthenticatedAppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedAppActiviteRoute =
+  AuthenticatedAppActiviteRouteImport.update({
+    id: '/activite',
+    path: '/activite',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppRepasRoute = AuthenticatedAppRepasRouteImport.update({
+  id: '/repas',
+  path: '/repas',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AuthenticatedAppRouteWithChildren
+  '/app/activite': typeof AuthenticatedAppActiviteRoute
+  '/app/repas': typeof AuthenticatedAppRepasRoute
   '/app/': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/app/activite': typeof AuthenticatedAppActiviteRoute
+  '/app/repas': typeof AuthenticatedAppRepasRoute
   '/app': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRoutesById {
@@ -48,18 +65,22 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/_authenticated/app': typeof AuthenticatedAppRouteWithChildren
+  '/_authenticated/app/activite': typeof AuthenticatedAppActiviteRoute
+  '/_authenticated/app/repas': typeof AuthenticatedAppRepasRoute
   '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app' | '/app/'
+  fullPaths: '/' | '/app' | '/app/activite' | '/app/repas' | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app'
+  to: '/' | '/app/activite' | '/app/repas' | '/app'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/_authenticated/app'
+    | '/_authenticated/app/activite'
+    | '/_authenticated/app/repas'
     | '/_authenticated/app/'
   fileRoutesById: FileRoutesById
 }
@@ -98,14 +119,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppIndexRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/app/activite': {
+      id: '/_authenticated/app/activite'
+      path: '/activite'
+      fullPath: '/app/activite'
+      preLoaderRoute: typeof AuthenticatedAppActiviteRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/repas': {
+      id: '/_authenticated/app/repas'
+      path: '/repas'
+      fullPath: '/app/repas'
+      preLoaderRoute: typeof AuthenticatedAppRepasRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
   }
 }
 
 interface AuthenticatedAppRouteChildren {
+  AuthenticatedAppActiviteRoute: typeof AuthenticatedAppActiviteRoute
+  AuthenticatedAppRepasRoute: typeof AuthenticatedAppRepasRoute
   AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
 }
 
 const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
+  AuthenticatedAppActiviteRoute: AuthenticatedAppActiviteRoute,
+  AuthenticatedAppRepasRoute: AuthenticatedAppRepasRoute,
   AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
 }
 
