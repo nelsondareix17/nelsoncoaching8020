@@ -14,16 +14,207 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      activity_entries: {
+        Row: {
+          client_id: string
+          created_at: string
+          entry_date: string
+          id: string
+          source: string
+          steps: number
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          entry_date?: string
+          id?: string
+          source?: string
+          steps?: number
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          entry_date?: string
+          id?: string
+          source?: string
+          steps?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activity_entries_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meal_photos: {
+        Row: {
+          analysis_status: string
+          calories_final: number | null
+          calories_raw: number | null
+          client_id: string
+          created_at: string
+          detected_items: Json | null
+          entry_date: string
+          id: string
+          image_path: string
+          note: string | null
+          taken_at: string
+        }
+        Insert: {
+          analysis_status?: string
+          calories_final?: number | null
+          calories_raw?: number | null
+          client_id: string
+          created_at?: string
+          detected_items?: Json | null
+          entry_date?: string
+          id?: string
+          image_path: string
+          note?: string | null
+          taken_at?: string
+        }
+        Update: {
+          analysis_status?: string
+          calories_final?: number | null
+          calories_raw?: number | null
+          client_id?: string
+          created_at?: string
+          detected_items?: Json | null
+          entry_date?: string
+          id?: string
+          image_path?: string
+          note?: string | null
+          taken_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meal_photos_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          coach_id: string | null
+          created_at: string
+          full_name: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          updated_at: string
+        }
+        Insert: {
+          coach_id?: string | null
+          created_at?: string
+          full_name?: string
+          id: string
+          role?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+        }
+        Update: {
+          coach_id?: string | null
+          created_at?: string
+          full_name?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_coach_id_fkey"
+            columns: ["coach_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      weight_entries: {
+        Row: {
+          client_id: string
+          created_at: string
+          entry_date: string
+          id: string
+          weight_kg: number
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          entry_date?: string
+          id?: string
+          weight_kg: number
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          entry_date?: string
+          id?: string
+          weight_kg?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "weight_entries_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workouts: {
+        Row: {
+          client_id: string
+          created_at: string
+          duration_min: number
+          entry_date: string
+          id: string
+          note: string | null
+          workout_type: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          duration_min: number
+          entry_date?: string
+          id?: string
+          note?: string | null
+          workout_type: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          duration_min?: number
+          entry_date?: string
+          id?: string
+          note?: string | null
+          workout_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workouts_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_coach: { Args: { _uid: string }; Returns: boolean }
+      is_coach_of: { Args: { _client: string }; Returns: boolean }
+      my_coach_id: { Args: never; Returns: string }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "client" | "coach"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +341,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["client", "coach"],
+    },
   },
 } as const
