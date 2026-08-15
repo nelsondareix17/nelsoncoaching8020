@@ -10,33 +10,142 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
+import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app.index'
+import { Route as AuthenticatedAppActiviteRouteImport } from './routes/_authenticated/app.activite'
+import { Route as AuthenticatedAppCompteRouteImport } from './routes/_authenticated/app.compte'
+import { Route as AuthenticatedAppHistoriqueRouteImport } from './routes/_authenticated/app.historique'
+import { Route as AuthenticatedAppRepasRouteImport } from './routes/_authenticated/app.repas'
+import { Route as AuthenticatedCoachIndexRouteImport } from './routes/_authenticated/coach.index'
+import { Route as AuthenticatedCoachClientIdRouteImport } from './routes/_authenticated/coach.$clientId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAppRoute = AuthenticatedAppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAppIndexRoute = AuthenticatedAppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppActiviteRoute =
+  AuthenticatedAppActiviteRouteImport.update({
+    id: '/activite',
+    path: '/activite',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppCompteRoute = AuthenticatedAppCompteRouteImport.update({
+  id: '/compte',
+  path: '/compte',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppHistoriqueRoute =
+  AuthenticatedAppHistoriqueRouteImport.update({
+    id: '/historique',
+    path: '/historique',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppRepasRoute = AuthenticatedAppRepasRouteImport.update({
+  id: '/repas',
+  path: '/repas',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedCoachIndexRoute = AuthenticatedCoachIndexRouteImport.update({
+  id: '/coach/',
+  path: '/coach/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCoachClientIdRoute =
+  AuthenticatedCoachClientIdRouteImport.update({
+    id: '/coach/$clientId',
+    path: '/coach/$clientId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AuthenticatedAppRouteWithChildren
+  '/app/activite': typeof AuthenticatedAppActiviteRoute
+  '/app/compte': typeof AuthenticatedAppCompteRoute
+  '/app/historique': typeof AuthenticatedAppHistoriqueRoute
+  '/app/repas': typeof AuthenticatedAppRepasRoute
+  '/coach/$clientId': typeof AuthenticatedCoachClientIdRoute
+  '/app/': typeof AuthenticatedAppIndexRoute
+  '/coach/': typeof AuthenticatedCoachIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/app/activite': typeof AuthenticatedAppActiviteRoute
+  '/app/compte': typeof AuthenticatedAppCompteRoute
+  '/app/historique': typeof AuthenticatedAppHistoriqueRoute
+  '/app/repas': typeof AuthenticatedAppRepasRoute
+  '/coach/$clientId': typeof AuthenticatedCoachClientIdRoute
+  '/app': typeof AuthenticatedAppIndexRoute
+  '/coach': typeof AuthenticatedCoachIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/_authenticated/app': typeof AuthenticatedAppRouteWithChildren
+  '/_authenticated/app/activite': typeof AuthenticatedAppActiviteRoute
+  '/_authenticated/app/compte': typeof AuthenticatedAppCompteRoute
+  '/_authenticated/app/historique': typeof AuthenticatedAppHistoriqueRoute
+  '/_authenticated/app/repas': typeof AuthenticatedAppRepasRoute
+  '/_authenticated/coach/$clientId': typeof AuthenticatedCoachClientIdRoute
+  '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
+  '/_authenticated/coach/': typeof AuthenticatedCoachIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/app/activite'
+    | '/app/compte'
+    | '/app/historique'
+    | '/app/repas'
+    | '/coach/$clientId'
+    | '/app/'
+    | '/coach/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/app/activite'
+    | '/app/compte'
+    | '/app/historique'
+    | '/app/repas'
+    | '/coach/$clientId'
+    | '/app'
+    | '/coach'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/_authenticated/app'
+    | '/_authenticated/app/activite'
+    | '/_authenticated/app/compte'
+    | '/_authenticated/app/historique'
+    | '/_authenticated/app/repas'
+    | '/_authenticated/coach/$clientId'
+    | '/_authenticated/app/'
+    | '/_authenticated/coach/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +157,109 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/app': {
+      id: '/_authenticated/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AuthenticatedAppRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/app/': {
+      id: '/_authenticated/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AuthenticatedAppIndexRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/activite': {
+      id: '/_authenticated/app/activite'
+      path: '/activite'
+      fullPath: '/app/activite'
+      preLoaderRoute: typeof AuthenticatedAppActiviteRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/compte': {
+      id: '/_authenticated/app/compte'
+      path: '/compte'
+      fullPath: '/app/compte'
+      preLoaderRoute: typeof AuthenticatedAppCompteRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/historique': {
+      id: '/_authenticated/app/historique'
+      path: '/historique'
+      fullPath: '/app/historique'
+      preLoaderRoute: typeof AuthenticatedAppHistoriqueRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/repas': {
+      id: '/_authenticated/app/repas'
+      path: '/repas'
+      fullPath: '/app/repas'
+      preLoaderRoute: typeof AuthenticatedAppRepasRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/coach/': {
+      id: '/_authenticated/coach/'
+      path: '/coach'
+      fullPath: '/coach/'
+      preLoaderRoute: typeof AuthenticatedCoachIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/coach/$clientId': {
+      id: '/_authenticated/coach/$clientId'
+      path: '/coach/$clientId'
+      fullPath: '/coach/$clientId'
+      preLoaderRoute: typeof AuthenticatedCoachClientIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedAppRouteChildren {
+  AuthenticatedAppActiviteRoute: typeof AuthenticatedAppActiviteRoute
+  AuthenticatedAppCompteRoute: typeof AuthenticatedAppCompteRoute
+  AuthenticatedAppHistoriqueRoute: typeof AuthenticatedAppHistoriqueRoute
+  AuthenticatedAppRepasRoute: typeof AuthenticatedAppRepasRoute
+  AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
+}
+
+const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
+  AuthenticatedAppActiviteRoute: AuthenticatedAppActiviteRoute,
+  AuthenticatedAppCompteRoute: AuthenticatedAppCompteRoute,
+  AuthenticatedAppHistoriqueRoute: AuthenticatedAppHistoriqueRoute,
+  AuthenticatedAppRepasRoute: AuthenticatedAppRepasRoute,
+  AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
+}
+
+const AuthenticatedAppRouteWithChildren =
+  AuthenticatedAppRoute._addFileChildren(AuthenticatedAppRouteChildren)
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAppRoute: typeof AuthenticatedAppRouteWithChildren
+  AuthenticatedCoachClientIdRoute: typeof AuthenticatedCoachClientIdRoute
+  AuthenticatedCoachIndexRoute: typeof AuthenticatedCoachIndexRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAppRoute: AuthenticatedAppRouteWithChildren,
+  AuthenticatedCoachClientIdRoute: AuthenticatedCoachClientIdRoute,
+  AuthenticatedCoachIndexRoute: AuthenticatedCoachIndexRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
