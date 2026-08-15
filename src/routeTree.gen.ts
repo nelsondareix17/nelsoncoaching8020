@@ -14,6 +14,8 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app.index'
 import { Route as AuthenticatedAppActiviteRouteImport } from './routes/_authenticated/app.activite'
+import { Route as AuthenticatedAppCompteRouteImport } from './routes/_authenticated/app.compte'
+import { Route as AuthenticatedAppHistoriqueRouteImport } from './routes/_authenticated/app.historique'
 import { Route as AuthenticatedAppRepasRouteImport } from './routes/_authenticated/app.repas'
 
 const IndexRoute = IndexRouteImport.update({
@@ -41,6 +43,17 @@ const AuthenticatedAppActiviteRoute =
     path: '/activite',
     getParentRoute: () => AuthenticatedAppRoute,
   } as any)
+const AuthenticatedAppCompteRoute = AuthenticatedAppCompteRouteImport.update({
+  id: '/compte',
+  path: '/compte',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppHistoriqueRoute =
+  AuthenticatedAppHistoriqueRouteImport.update({
+    id: '/historique',
+    path: '/historique',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
 const AuthenticatedAppRepasRoute = AuthenticatedAppRepasRouteImport.update({
   id: '/repas',
   path: '/repas',
@@ -51,12 +64,16 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AuthenticatedAppRouteWithChildren
   '/app/activite': typeof AuthenticatedAppActiviteRoute
+  '/app/compte': typeof AuthenticatedAppCompteRoute
+  '/app/historique': typeof AuthenticatedAppHistoriqueRoute
   '/app/repas': typeof AuthenticatedAppRepasRoute
   '/app/': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/app/activite': typeof AuthenticatedAppActiviteRoute
+  '/app/compte': typeof AuthenticatedAppCompteRoute
+  '/app/historique': typeof AuthenticatedAppHistoriqueRoute
   '/app/repas': typeof AuthenticatedAppRepasRoute
   '/app': typeof AuthenticatedAppIndexRoute
 }
@@ -66,20 +83,37 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/_authenticated/app': typeof AuthenticatedAppRouteWithChildren
   '/_authenticated/app/activite': typeof AuthenticatedAppActiviteRoute
+  '/_authenticated/app/compte': typeof AuthenticatedAppCompteRoute
+  '/_authenticated/app/historique': typeof AuthenticatedAppHistoriqueRoute
   '/_authenticated/app/repas': typeof AuthenticatedAppRepasRoute
   '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app' | '/app/activite' | '/app/repas' | '/app/'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/app/activite'
+    | '/app/compte'
+    | '/app/historique'
+    | '/app/repas'
+    | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app/activite' | '/app/repas' | '/app'
+  to:
+    | '/'
+    | '/app/activite'
+    | '/app/compte'
+    | '/app/historique'
+    | '/app/repas'
+    | '/app'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/_authenticated/app'
     | '/_authenticated/app/activite'
+    | '/_authenticated/app/compte'
+    | '/_authenticated/app/historique'
     | '/_authenticated/app/repas'
     | '/_authenticated/app/'
   fileRoutesById: FileRoutesById
@@ -126,6 +160,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppActiviteRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/app/compte': {
+      id: '/_authenticated/app/compte'
+      path: '/compte'
+      fullPath: '/app/compte'
+      preLoaderRoute: typeof AuthenticatedAppCompteRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/historique': {
+      id: '/_authenticated/app/historique'
+      path: '/historique'
+      fullPath: '/app/historique'
+      preLoaderRoute: typeof AuthenticatedAppHistoriqueRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
     '/_authenticated/app/repas': {
       id: '/_authenticated/app/repas'
       path: '/repas'
@@ -138,12 +186,16 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAppRouteChildren {
   AuthenticatedAppActiviteRoute: typeof AuthenticatedAppActiviteRoute
+  AuthenticatedAppCompteRoute: typeof AuthenticatedAppCompteRoute
+  AuthenticatedAppHistoriqueRoute: typeof AuthenticatedAppHistoriqueRoute
   AuthenticatedAppRepasRoute: typeof AuthenticatedAppRepasRoute
   AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
 }
 
 const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppActiviteRoute: AuthenticatedAppActiviteRoute,
+  AuthenticatedAppCompteRoute: AuthenticatedAppCompteRoute,
+  AuthenticatedAppHistoriqueRoute: AuthenticatedAppHistoriqueRoute,
   AuthenticatedAppRepasRoute: AuthenticatedAppRepasRoute,
   AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
 }
