@@ -134,6 +134,82 @@ export type Database = {
           },
         ]
       }
+      push_subscriptions: {
+        Row: {
+          auth: string
+          client_id: string
+          created_at: string
+          enabled: boolean
+          endpoint: string
+          id: string
+          p256dh: string
+          updated_at: string
+        }
+        Insert: {
+          auth: string
+          client_id: string
+          created_at?: string
+          enabled?: boolean
+          endpoint: string
+          id?: string
+          p256dh: string
+          updated_at?: string
+        }
+        Update: {
+          auth?: string
+          client_id?: string
+          created_at?: string
+          enabled?: boolean
+          endpoint?: string
+          id?: string
+          p256dh?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "push_subscriptions_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reminder_log: {
+        Row: {
+          client_id: string
+          created_at: string
+          entry_date: string
+          id: string
+          kind: string
+          slot_hour: number
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          entry_date: string
+          id?: string
+          kind: string
+          slot_hour: number
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          entry_date?: string
+          id?: string
+          kind?: string
+          slot_hour?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reminder_log_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       weight_entries: {
         Row: {
           client_id: string
