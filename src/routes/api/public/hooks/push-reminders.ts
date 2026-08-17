@@ -127,9 +127,14 @@ export const Route = createFileRoute("/api/public/hooks/push-reminders")({
                 vapid,
               );
 
+              const headers = new Headers();
+              for (const [k, v] of Object.entries(payload.headers)) {
+                if (typeof v === "string") headers.set(k, v);
+              }
+
               const res = await fetch(sub.endpoint, {
                 method: payload.method,
-                headers: payload.headers,
+                headers,
                 body: payload.body as unknown as BodyInit,
               });
 

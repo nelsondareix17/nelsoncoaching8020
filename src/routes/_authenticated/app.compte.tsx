@@ -2,12 +2,19 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { BellRing } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useProfile, signOut } from "@/hooks/useAuth";
+import {
+  disableReminders,
+  enableReminders,
+  getExistingSubscription,
+  pushSupported,
+} from "@/lib/push";
 
 export const Route = createFileRoute("/_authenticated/app/compte")({
   component: AccountPage,
@@ -19,10 +26,43 @@ function AccountPage() {
   const [name, setName] = useState("");
   const [coachCode, setCoachCode] = useState("");
   const [saving, setSaving] = useState(false);
+  const [pushOn, setPushOn] = useState(false);
+  const [pushBusy, setPushBusy] = useState(false);
+  const supported = pushSupported();
 
   useEffect(() => {
     if (data) setName(data.profile.full_name);
   }, [data]);
+
+  useEffect(() => {
+    void getExistingSubscription().then((sub) => setPushOn(Boolean(sub)));
+  }, []);
+
+  async function toggleReminders() {
+    if (!data) return;
+    setPushBusy(true);
+    try {
+      if (pushOn) {
+        await disableReminders();
+        setPushOn(false);
+        toast.success("Rappels désactivés.");
+      } else {
+        await enableReminders(data.userId);
+        setPushOn(true);
+        toast.success("Rappels activés ✅");
+      }
+    } catch (err) {
+      const code = err instanceof Error ? err.message : "";
+      toast.error(
+        code === "denied"
+          ? "Autorisation refusée dans les réglages du navigateur."
+          : "Activation impossible sur cet appareil.",
+      );
+    } finally {
+      setPushBusy(false);
+    }
+  }
+
 
   async function saveName() {
     if (!data) return;
@@ -101,6 +141,34 @@ function AccountPage() {
           </div>
         )}
       </div>
+
+      <div className="space-y-4 rounded-2xl border border-border bg-card p-5">
+        <div className="flex items-start gap-3">
+          <BellRing className="mt-0.5 size-5 text-muted-foreground" />
+          <div className="space-y-1">
+            <p className="text-sm font-semibold">Rappels quotidiens</p>
+            <p className="text-xs text-muted-foreground">
+              Poids à 7h, repas à 9h, 12h et 20h. Aucun rappel si la saisie est déjà faite.
+            </p>
+          </div>
+        </div>
+        {supported ? (
+          <Button
+            className="w-full"
+            variant={pushOn ? "outline" : "default"}
+            onClick={() => void toggleReminders()}
+            disabled={pushBusy}
+          >
+            {pushOn ? "Désactiver les rappels" : "Activer les rappels"}
+          </Button>
+        ) : (
+          <p className="text-xs text-muted-foreground">
+            Sur iPhone, ajoute d'abord l'app à l'écran d'accueil (Partager → Sur l'écran d'accueil)
+            pour recevoir les rappels.
+          </p>
+        )}
+      </div>
+
 
       <Button variant="outline" className="w-full" onClick={() => void signOut()}>
         Se déconnecter
