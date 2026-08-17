@@ -19,6 +19,7 @@ import { Route as AuthenticatedAppHistoriqueRouteImport } from './routes/_authen
 import { Route as AuthenticatedAppRepasRouteImport } from './routes/_authenticated/app.repas'
 import { Route as AuthenticatedCoachIndexRouteImport } from './routes/_authenticated/coach.index'
 import { Route as AuthenticatedCoachClientIdRouteImport } from './routes/_authenticated/coach.$clientId'
+import { Route as ApiPublicHooksPushRemindersRouteImport } from './routes/api/public/hooks/push-reminders'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -72,6 +73,12 @@ const AuthenticatedCoachClientIdRoute =
     path: '/coach/$clientId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiPublicHooksPushRemindersRoute =
+  ApiPublicHooksPushRemindersRouteImport.update({
+    id: '/api/public/hooks/push-reminders',
+    path: '/api/public/hooks/push-reminders',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -83,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/coach/$clientId': typeof AuthenticatedCoachClientIdRoute
   '/app/': typeof AuthenticatedAppIndexRoute
   '/coach/': typeof AuthenticatedCoachIndexRoute
+  '/api/public/hooks/push-reminders': typeof ApiPublicHooksPushRemindersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -93,6 +101,7 @@ export interface FileRoutesByTo {
   '/coach/$clientId': typeof AuthenticatedCoachClientIdRoute
   '/app': typeof AuthenticatedAppIndexRoute
   '/coach': typeof AuthenticatedCoachIndexRoute
+  '/api/public/hooks/push-reminders': typeof ApiPublicHooksPushRemindersRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -106,6 +115,7 @@ export interface FileRoutesById {
   '/_authenticated/coach/$clientId': typeof AuthenticatedCoachClientIdRoute
   '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
   '/_authenticated/coach/': typeof AuthenticatedCoachIndexRoute
+  '/api/public/hooks/push-reminders': typeof ApiPublicHooksPushRemindersRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -119,6 +129,7 @@ export interface FileRouteTypes {
     | '/coach/$clientId'
     | '/app/'
     | '/coach/'
+    | '/api/public/hooks/push-reminders'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -129,6 +140,7 @@ export interface FileRouteTypes {
     | '/coach/$clientId'
     | '/app'
     | '/coach'
+    | '/api/public/hooks/push-reminders'
   id:
     | '__root__'
     | '/'
@@ -141,11 +153,13 @@ export interface FileRouteTypes {
     | '/_authenticated/coach/$clientId'
     | '/_authenticated/app/'
     | '/_authenticated/coach/'
+    | '/api/public/hooks/push-reminders'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  ApiPublicHooksPushRemindersRoute: typeof ApiPublicHooksPushRemindersRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -220,6 +234,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCoachClientIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/hooks/push-reminders': {
+      id: '/api/public/hooks/push-reminders'
+      path: '/api/public/hooks/push-reminders'
+      fullPath: '/api/public/hooks/push-reminders'
+      preLoaderRoute: typeof ApiPublicHooksPushRemindersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -260,6 +281,7 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  ApiPublicHooksPushRemindersRoute: ApiPublicHooksPushRemindersRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
