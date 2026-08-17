@@ -217,17 +217,10 @@ function AuthPage() {
               Créer mon compte
             </Button>
           </form>
+          <GoogleBlock />
         </TabsContent>
       </Tabs>
 
-      <div className="space-y-3">
-        <div className="flex items-center gap-3 text-xs text-muted-foreground">
-          <span className="h-px flex-1 bg-border" /> ou <span className="h-px flex-1 bg-border" />
-        </div>
-        <Button variant="outline" className="w-full" onClick={handleGoogle} disabled={loading}>
-          Continuer avec Google
-        </Button>
-      </div>
     </main>
   );
 }
