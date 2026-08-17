@@ -162,7 +162,9 @@ function AuthPage() {
               Se connecter
             </Button>
           </form>
+          <GoogleBlock />
         </TabsContent>
+
 
         <TabsContent value="signup" className="pt-6">
           <form className="space-y-4" onSubmit={handleSignUp}>
