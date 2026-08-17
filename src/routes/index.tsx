@@ -87,8 +87,30 @@ function AuthPage() {
   async function handleGoogle() {
     setLoading(true);
     const ok = await lovableSignInWithGoogle();
-    if (!ok) setLoading(false);
+    if (!ok) {
+      setLoading(false);
+      return;
+    }
+    const { data } = await supabase.auth.getSession();
+    if (data.session) {
+      await goToSpace(navigate);
+    }
+    setLoading(false);
   }
+
+  function GoogleBlock() {
+    return (
+      <div className="space-y-3 pt-6">
+        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+          <span className="h-px flex-1 bg-border" /> ou <span className="h-px flex-1 bg-border" />
+        </div>
+        <Button variant="outline" className="w-full" onClick={handleGoogle} disabled={loading}>
+          Continuer avec Google
+        </Button>
+      </div>
+    );
+  }
+
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center gap-8 px-6 py-12">
