@@ -142,6 +142,34 @@ function AccountPage() {
         )}
       </div>
 
+      <div className="space-y-4 rounded-2xl border border-border bg-card p-5">
+        <div className="flex items-start gap-3">
+          <BellRing className="mt-0.5 size-5 text-muted-foreground" />
+          <div className="space-y-1">
+            <p className="text-sm font-semibold">Rappels quotidiens</p>
+            <p className="text-xs text-muted-foreground">
+              Poids à 7h, repas à 9h, 12h et 20h. Aucun rappel si la saisie est déjà faite.
+            </p>
+          </div>
+        </div>
+        {supported ? (
+          <Button
+            className="w-full"
+            variant={pushOn ? "outline" : "default"}
+            onClick={() => void toggleReminders()}
+            disabled={pushBusy}
+          >
+            {pushOn ? "Désactiver les rappels" : "Activer les rappels"}
+          </Button>
+        ) : (
+          <p className="text-xs text-muted-foreground">
+            Sur iPhone, ajoute d'abord l'app à l'écran d'accueil (Partager → Sur l'écran d'accueil)
+            pour recevoir les rappels.
+          </p>
+        )}
+      </div>
+
+
       <Button variant="outline" className="w-full" onClick={() => void signOut()}>
         Se déconnecter
       </Button>
