@@ -54,7 +54,10 @@ export type Database = {
           analysis_status: string
           calories_final: number | null
           calories_raw: number | null
+          calories_source: string
           client_id: string
+          corrected_at: string | null
+          corrected_by: string | null
           created_at: string
           detected_items: Json | null
           entry_date: string
@@ -67,7 +70,10 @@ export type Database = {
           analysis_status?: string
           calories_final?: number | null
           calories_raw?: number | null
+          calories_source?: string
           client_id: string
+          corrected_at?: string | null
+          corrected_by?: string | null
           created_at?: string
           detected_items?: Json | null
           entry_date?: string
@@ -80,7 +86,10 @@ export type Database = {
           analysis_status?: string
           calories_final?: number | null
           calories_raw?: number | null
+          calories_source?: string
           client_id?: string
+          corrected_at?: string | null
+          corrected_by?: string | null
           created_at?: string
           detected_items?: Json | null
           entry_date?: string
@@ -93,6 +102,13 @@ export type Database = {
           {
             foreignKeyName: "meal_photos_client_id_fkey"
             columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meal_photos_corrected_by_fkey"
+            columns: ["corrected_by"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
