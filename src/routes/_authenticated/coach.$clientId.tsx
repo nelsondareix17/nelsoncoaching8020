@@ -18,6 +18,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { lastNDays, shortLabel } from "@/lib/dates";
+import { MealCorrectionDialog, type CoachMeal } from "@/components/MealCorrectionDialog";
 
 export const Route = createFileRoute("/_authenticated/coach/$clientId")({
   component: ClientDetail,
@@ -32,10 +33,12 @@ const PERIODS = [
 function ClientDetail() {
   const { clientId } = Route.useParams();
   const [days, setDays] = useState<number>(7);
+  const [selected, setSelected] = useState<CoachMeal | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const range = lastNDays(days);
   const from = range[0]!;
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ["coach-client", clientId, days],
     queryFn: async () => {
       const [profile, weights, meals, activity, workouts] = await Promise.all([
@@ -48,7 +51,7 @@ function ClientDetail() {
           .order("entry_date"),
         supabase
           .from("meal_photos")
-          .select("id, entry_date, taken_at, image_path, note, calories_final, analysis_status")
+          .select("id, entry_date, taken_at, image_path, note, calories_raw, calories_final, calories_source, analysis_status")
           .eq("client_id", clientId)
           .gte("entry_date", from)
           .order("taken_at", { ascending: false }),
