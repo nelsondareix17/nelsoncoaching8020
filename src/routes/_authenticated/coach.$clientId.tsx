@@ -18,6 +18,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { lastNDays, shortLabel } from "@/lib/dates";
+import { MealCorrectionDialog, type CoachMeal } from "@/components/MealCorrectionDialog";
 
 export const Route = createFileRoute("/_authenticated/coach/$clientId")({
   component: ClientDetail,
@@ -32,10 +33,12 @@ const PERIODS = [
 function ClientDetail() {
   const { clientId } = Route.useParams();
   const [days, setDays] = useState<number>(7);
+  const [selected, setSelected] = useState<CoachMeal | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const range = lastNDays(days);
   const from = range[0]!;
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ["coach-client", clientId, days],
     queryFn: async () => {
       const [profile, weights, meals, activity, workouts] = await Promise.all([
@@ -48,7 +51,7 @@ function ClientDetail() {
           .order("entry_date"),
         supabase
           .from("meal_photos")
-          .select("id, entry_date, taken_at, image_path, note, calories_final, analysis_status")
+          .select("id, entry_date, taken_at, image_path, note, calories_raw, calories_final, calories_source, analysis_status")
           .eq("client_id", clientId)
           .gte("entry_date", from)
           .order("taken_at", { ascending: false }),
@@ -187,29 +190,43 @@ function ClientDetail() {
           <section className="rounded-2xl border border-border bg-card p-5">
             <h2 className="text-sm font-semibold">Photos de repas</h2>
             <p className="mt-1 text-xs text-muted-foreground">
-              Estimation calorique finale (marge +15%) sous chaque photo.
+              Estimation calorique finale (marge +15%). Touchez une photo pour corriger la valeur.
             </p>
             <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
               {data?.meals.length ? (
                 data.meals.map((m) => (
                   <figure key={m.id} className="space-y-2">
-                    {m.url ? (
-                      <img
-                        src={m.url}
-                        alt={m.note ?? "Photo de repas du client"}
-                        loading="lazy"
-                        className="aspect-square w-full rounded-xl border border-border object-cover"
-                      />
-                    ) : (
-                      <div className="aspect-square w-full rounded-xl border border-dashed border-border" />
-                    )}
+                    <button
+                      type="button"
+                      className="block w-full rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      onClick={() => {
+                        setSelected(m);
+                        setDialogOpen(true);
+                      }}
+                    >
+                      {m.url ? (
+                        <img
+                          src={m.url}
+                          alt={m.note ?? "Photo de repas du client"}
+                          loading="lazy"
+                          className="aspect-square w-full rounded-xl border border-border object-cover"
+                        />
+                      ) : (
+                        <div className="aspect-square w-full rounded-xl border border-dashed border-border" />
+                      )}
+                    </button>
                     <figcaption className="space-y-0.5">
-                      <p className="text-sm font-semibold">
+                      <p className="flex flex-wrap items-center gap-1.5 text-sm font-semibold">
                         {m.calories_final
                           ? `${m.calories_final} kcal`
                           : m.analysis_status === "failed"
                             ? "Estimation indisponible"
                             : "Analyse en cours…"}
+                        {m.calories_source === "coach" ? (
+                          <Badge variant="secondary" className="text-[10px] font-medium">
+                            Corrigé
+                          </Badge>
+                        ) : null}
                       </p>
                       <p className="text-xs text-muted-foreground">
                         {new Date(m.taken_at).toLocaleString("fr-FR", {
@@ -228,6 +245,14 @@ function ClientDetail() {
               )}
             </div>
           </section>
+
+          <MealCorrectionDialog
+            meal={selected}
+            open={dialogOpen}
+            onOpenChange={setDialogOpen}
+            onSaved={() => void refetch()}
+          />
+
         </div>
       )}
     </div>
