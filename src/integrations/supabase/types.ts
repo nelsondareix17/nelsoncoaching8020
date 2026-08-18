@@ -65,6 +65,9 @@ export type Database = {
           image_path: string
           note: string | null
           taken_at: string
+          total_carbs_g: number | null
+          total_fat_g: number | null
+          total_protein_g: number | null
         }
         Insert: {
           analysis_status?: string
@@ -81,6 +84,9 @@ export type Database = {
           image_path: string
           note?: string | null
           taken_at?: string
+          total_carbs_g?: number | null
+          total_fat_g?: number | null
+          total_protein_g?: number | null
         }
         Update: {
           analysis_status?: string
@@ -97,6 +103,9 @@ export type Database = {
           image_path?: string
           note?: string | null
           taken_at?: string
+          total_carbs_g?: number | null
+          total_fat_g?: number | null
+          total_protein_g?: number | null
         }
         Relationships: [
           {
