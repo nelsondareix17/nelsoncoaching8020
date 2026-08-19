@@ -23,7 +23,12 @@ export type CoachMeal = {
   calories_final: number | null;
   calories_source: string;
   analysis_status: string;
+  detected_items?: unknown;
+  total_protein_g?: number | null;
+  total_carbs_g?: number | null;
+  total_fat_g?: number | null;
 };
+
 
 export function MealCorrectionDialog({
   meal,
