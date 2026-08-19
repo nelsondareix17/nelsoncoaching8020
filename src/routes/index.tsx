@@ -223,6 +223,9 @@ function AuthPage() {
         </TabsContent>
       </Tabs>
 
+      <footer className="mt-auto text-center">
+        <p className="text-xs text-muted-foreground">by NELSON COACHING</p>
+      </footer>
     </main>
   );
 }
