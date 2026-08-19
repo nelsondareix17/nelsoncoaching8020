@@ -57,37 +57,30 @@ export function CoachWeightForm({
   }
 
   return (
-    <section className="rounded-2xl border border-border bg-card p-5">
-      <h2 className="text-sm font-semibold">Ajouter un poids</h2>
-      <p className="mt-1 text-xs text-muted-foreground">
-        Si le client vous communique son poids, saisissez-le ici. Une valeur déjà présente à cette
-        date sera remplacée.
-      </p>
-      <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
-        <div className="flex-1 space-y-2">
-          <Label htmlFor="weight-date">Date</Label>
-          <Input
-            id="weight-date"
-            type="date"
-            max={todayISO()}
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
-        </div>
-        <div className="flex-1 space-y-2">
-          <Label htmlFor="weight-kg">Poids (kg)</Label>
-          <Input
-            id="weight-kg"
-            inputMode="decimal"
-            placeholder="72.4"
-            value={weight}
-            onChange={(e) => setWeight(e.target.value)}
-          />
-        </div>
-        <Button onClick={() => void save()} disabled={saving} className="sm:w-40">
-          {saving ? "Enregistrement…" : "Enregistrer"}
-        </Button>
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+      <div className="flex-1 space-y-2">
+        <Label htmlFor="weight-date">Date</Label>
+        <Input
+          id="weight-date"
+          type="date"
+          max={todayISO()}
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+        />
       </div>
-    </section>
+      <div className="flex-1 space-y-2">
+        <Label htmlFor="weight-kg">Poids (kg)</Label>
+        <Input
+          id="weight-kg"
+          inputMode="decimal"
+          placeholder="72.4"
+          value={weight}
+          onChange={(e) => setWeight(e.target.value)}
+        />
+      </div>
+      <Button onClick={() => void save()} disabled={saving} className="sm:w-40">
+        {saving ? "Enregistrement…" : "Enregistrer"}
+      </Button>
+    </div>
   );
 }
