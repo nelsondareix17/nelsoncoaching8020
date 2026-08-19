@@ -19,6 +19,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { lastNDays, shortLabel } from "@/lib/dates";
 import { MealCorrectionDialog, type CoachMeal } from "@/components/MealCorrectionDialog";
+import { CoachMealList } from "@/components/CoachMealList";
+import { CoachWeightForm } from "@/components/CoachWeightForm";
 
 export const Route = createFileRoute("/_authenticated/coach/$clientId")({
   component: ClientDetail,
