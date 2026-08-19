@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { ArrowLeft, Dumbbell } from "lucide-react";
+import { ArrowLeft, Dumbbell, Plus } from "lucide-react";
 import {
   Bar,
   BarChart,
@@ -17,6 +17,14 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { lastNDays, shortLabel } from "@/lib/dates";
 import { MealCorrectionDialog, type CoachMeal } from "@/components/MealCorrectionDialog";
 import { CoachMealList } from "@/components/CoachMealList";
@@ -37,6 +45,7 @@ function ClientDetail() {
   const [days, setDays] = useState<number>(7);
   const [selected, setSelected] = useState<CoachMeal | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [weightDialogOpen, setWeightDialogOpen] = useState(false);
   const range = lastNDays(days);
   const from = range[0]!;
 
@@ -134,7 +143,34 @@ function ClientDetail() {
         <p className="mt-6 text-sm text-muted-foreground">Chargement des données…</p>
       ) : (
         <div className="mt-6 space-y-6">
-          <ChartCard title="Évolution du poids" subtitle="kg, jour par jour">
+          <ChartCard
+            title="Évolution du poids"
+            subtitle="kg, jour par jour"
+            headerAction={
+              <Dialog open={weightDialogOpen} onOpenChange={setWeightDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button size="icon" variant="outline" aria-label="Ajouter un poids">
+                    <Plus className="size-4" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Ajouter un poids</DialogTitle>
+                    <DialogDescription>
+                      Saisissez la date et le poids communiqué par le client.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <CoachWeightForm
+                    clientId={clientId}
+                    onSaved={() => {
+                      setWeightDialogOpen(false);
+                      void refetch();
+                    }}
+                  />
+                </DialogContent>
+              </Dialog>
+            }
+          >
             <ResponsiveContainer width="100%" height={220}>
               <LineChart data={data?.series ?? []}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
@@ -189,8 +225,6 @@ function ClientDetail() {
             </div>
           </ChartCard>
 
-          <CoachWeightForm clientId={clientId} onSaved={() => void refetch()} />
-
           <section className="rounded-2xl border border-border bg-card p-5">
             <h2 className="text-sm font-semibold">Photos de repas</h2>
             <p className="mb-4 mt-1 text-xs text-muted-foreground">
@@ -224,15 +258,22 @@ function ChartCard({
   title,
   subtitle,
   children,
+  headerAction,
 }: {
   title: string;
   subtitle: string;
   children: React.ReactNode;
+  headerAction?: React.ReactNode;
 }) {
   return (
     <section className="rounded-2xl border border-border bg-card p-5">
-      <h2 className="text-sm font-semibold">{title}</h2>
-      <p className="mb-4 mt-1 text-xs text-muted-foreground">{subtitle}</p>
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <div>
+          <h2 className="text-sm font-semibold">{title}</h2>
+          <p className="mt-1 text-xs text-muted-foreground">{subtitle}</p>
+        </div>
+        {headerAction}
+      </div>
       {children}
     </section>
   );
