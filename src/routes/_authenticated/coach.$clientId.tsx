@@ -51,7 +51,7 @@ function ClientDetail() {
           .order("entry_date"),
         supabase
           .from("meal_photos")
-          .select("id, entry_date, taken_at, image_path, note, calories_raw, calories_final, calories_source, analysis_status")
+          .select("id, entry_date, taken_at, image_path, note, calories_raw, calories_final, calories_source, analysis_status, detected_items, total_protein_g, total_carbs_g, total_fat_g")
           .eq("client_id", clientId)
           .gte("entry_date", from)
           .order("taken_at", { ascending: false }),
