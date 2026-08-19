@@ -1,0 +1,2 @@
+CREATE POLICY weights_coach_insert ON public.weight_entries FOR INSERT TO authenticated WITH CHECK (public.is_coach_of(client_id));
+CREATE POLICY weights_coach_update ON public.weight_entries FOR UPDATE TO authenticated USING (public.is_coach_of(client_id)) WITH CHECK (public.is_coach_of(client_id));
