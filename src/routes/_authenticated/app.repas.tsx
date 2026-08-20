@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useProfile } from "@/hooks/useAuth";
 import { todayISO } from "@/lib/dates";
+import { ClientMealFolders } from "@/components/ClientMealFolders";
 
 export const Route = createFileRoute("/_authenticated/app/repas")({
   component: MealPage,
@@ -112,6 +113,8 @@ function MealPage() {
           {uploading ? "Envoi…" : "Prendre / choisir une photo"}
         </Button>
       </div>
+
+      {data ? <ClientMealFolders clientId={data.userId} refreshKey={count} /> : null}
     </section>
   );
 }
