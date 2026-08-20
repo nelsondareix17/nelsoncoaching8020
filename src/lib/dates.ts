@@ -23,3 +23,30 @@ export function shortLabel(iso: string): string {
   const [, m, d] = iso.split("-");
   return `${d}/${m}`;
 }
+
+export function dayLabel(iso: string): string {
+  const today = todayISO();
+  if (iso === today) return "Aujourd'hui";
+  const y = new Date();
+  y.setDate(y.getDate() - 1);
+  if (iso === toISO(y)) return "Hier";
+  const [yy, mm, dd] = iso.split("-").map(Number);
+  const date = new Date(yy!, (mm ?? 1) - 1, dd ?? 1);
+  return date.toLocaleDateString("fr-FR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
+}
+
+export function groupByDay<T extends { entry_date: string }>(rows: T[]): { day: string; items: T[] }[] {
+  const map = new Map<string, T[]>();
+  for (const row of rows) {
+    const list = map.get(row.entry_date);
+    if (list) list.push(row);
+    else map.set(row.entry_date, [row]);
+  }
+  return [...map.entries()]
+    .sort((a, b) => (a[0] < b[0] ? 1 : -1))
+    .map(([day, items]) => ({ day, items }));
+}

@@ -19,6 +19,7 @@ export type CoachMeal = {
   url: string | null;
   note: string | null;
   taken_at: string;
+  entry_date: string;
   calories_raw: number | null;
   calories_final: number | null;
   calories_source: string;
