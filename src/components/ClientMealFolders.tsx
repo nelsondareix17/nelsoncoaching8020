@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { Check } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -10,6 +9,10 @@ import {
 } from "@/components/ui/accordion";
 import { dayLabel, groupByDay, lastNDays, todayISO } from "@/lib/dates";
 
+/**
+ * Vue client : uniquement les photos, jamais de calories, macros ou note.
+ * Aucune de ces donnees n'est selectionnee ni transmise au navigateur ici.
+ */
 export function ClientMealFolders({ clientId, refreshKey }: { clientId: string; refreshKey: number }) {
   const from = lastNDays(28)[0]!;
 
@@ -18,7 +21,7 @@ export function ClientMealFolders({ clientId, refreshKey }: { clientId: string; 
     queryFn: async () => {
       const { data: rows } = await supabase
         .from("meal_photos")
-        .select("id, entry_date, taken_at, image_path, note, analysis_status")
+        .select("id, entry_date, taken_at, image_path")
         .eq("client_id", clientId)
         .gte("entry_date", from)
         .order("taken_at", { ascending: false });
@@ -28,7 +31,12 @@ export function ClientMealFolders({ clientId, refreshKey }: { clientId: string; 
           const { data: url } = await supabase.storage
             .from("meal-photos")
             .createSignedUrl(m.image_path, 3600);
-          return { ...m, url: url?.signedUrl ?? null };
+          return {
+            id: m.id,
+            entry_date: m.entry_date,
+            taken_at: m.taken_at,
+            url: url?.signedUrl ?? null,
+          };
         }),
       );
     },
@@ -65,15 +73,14 @@ export function ClientMealFolders({ clientId, refreshKey }: { clientId: string; 
                     {meal.url ? (
                       <img
                         src={meal.url}
-                        alt={meal.note ?? "Ma photo de repas"}
+                        alt="Ma photo de repas"
                         loading="lazy"
                         className="aspect-square w-full rounded-lg border border-border object-cover"
                       />
                     ) : (
                       <div className="aspect-square w-full rounded-lg border border-dashed border-border" />
                     )}
-                    <p className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                      <Check className="size-3 text-success" />
+                    <p className="text-[11px] text-muted-foreground">
                       {new Date(meal.taken_at).toLocaleTimeString("fr-FR", {
                         hour: "2-digit",
                         minute: "2-digit",

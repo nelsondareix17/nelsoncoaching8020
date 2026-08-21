@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { Camera, Check } from "lucide-react";
+import { Camera, Check, ImagePlus } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { analyzeMealPhoto } from "@/lib/meals.functions";
@@ -18,10 +18,12 @@ export const Route = createFileRoute("/_authenticated/app/repas")({
 
 function MealPage() {
   const { data } = useProfile();
-  const fileRef = useRef<HTMLInputElement>(null);
+  const cameraRef = useRef<HTMLInputElement>(null);
+  const galleryRef = useRef<HTMLInputElement>(null);
   const [note, setNote] = useState("");
   const [uploading, setUploading] = useState(false);
   const [count, setCount] = useState(0);
+
 
   async function handleFile(file: File) {
     if (!data) return;
